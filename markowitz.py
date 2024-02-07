@@ -1,11 +1,16 @@
+from fix_dumbass_dependency import fix_dumbass_dependency
 from pypfopt.efficient_frontier import EfficientFrontier
 from pypfopt import risk_models
 from pypfopt import expected_returns
+import matplotlib.pyplot as plt
+
+# IMPORTANT
+# Fixes stupid code in pypfopt.plotting lib code
+fix_dumbass_dependency()
+
 from pypfopt import plotting
-import copy
 import pandas as pd
 import yfinance as yf
-import matplotlib.pyplot as plt
 
 # This version of the code follows Medium's implementation using the pypfopt library
 # The data used for this version comes from yfinance library
@@ -15,7 +20,9 @@ import matplotlib.pyplot as plt
 tickers = ['PTON', 'PINS', 'INSP.L', '0H6I.IL', 'ORCP.AQ', 'VOD.L', '0E6H.L', '888.L', 'GGP.L', 'HOTC.L', 'BOO.L', 'EUA.L', 'TSCO.L', 'AAF.L', '0Q1N.IL']
 
 # Download data for each stock
+print("Downloading stocks ticker data...")
 stock_dfs = {ticker: yf.download(ticker, start='2014-12-01', end='2020-01-01')['Adj Close'] for ticker in tickers}
+print("Download completed")
 
 # Concatenate into a dataframe
 df = pd.DataFrame(stock_dfs)
@@ -46,8 +53,8 @@ ax.scatter(std_tangent, ret_tangent, marker="*", s=100, c="r", label="Max Sharpe
 ax.set_title("Efficient Frontier of our portfolio")
 ax.legend()
 plt.tight_layout()
-# plt.savefig("ef_scatter.png", dpi=200)
-plt.show()
+plt.savefig("ef_scatter.png", dpi=200)
+# plt.show()
 
 #Get the optimal weights
 weights = ef.max_sharpe()
